@@ -1,0 +1,6 @@
+[submodule "deps/valentyusb"]
+	path = deps/valentyusb
+	url = https://github.com/litex-hub/valentyusb
+[submodule "deps/gateware"]
+	path = deps/gateware
+	url = https://github.com/betrusted-io/gateware
