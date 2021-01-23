@@ -2,12 +2,12 @@ import os
 import sys
 import argparse
 
-from litex.soc.integration.builder import *
-from litex.soc.integration.soc_core import *
-from litex.soc.integration.soc_sdram import *
+from litex.soc.integration.builder import Builder
 from litex.build.lattice.trellis import trellis_args, trellis_argdict
 
 from .feather_soc import FeatherSoC
+# Get argument parsing from here. Simplified compared to litex_boards.
+from .args import *
 
 # Build --------------------------------------------------------------------------------------------
 
@@ -20,7 +20,6 @@ def main():
     parser.add_argument("--revision",        default="0.2",        help="Board Revision: 0.1 or 0.2 (default)")
     parser.add_argument("--device",          default="25F",        help="ECP5 device (default: 25F)")
     parser.add_argument("--sdram-device",    default="MT41K64M16", help="SDRAM device (default: MT41K64M16)")
-    parser.add_argument("--with-spi-sdcard", action="store_true",  help="Enable SPI-mode SDCard support")
     builder_args(parser)
     soc_sdram_args(parser)
     trellis_args(parser)
@@ -32,11 +31,35 @@ def main():
         device       = args.device,
         sdram_device = args.sdram_device,
         sys_clk_freq = int(float(args.sys_clk_freq)),
-        **soc_sdram_argdict(args))
-    if args.with_spi_sdcard:
-        soc.add_spi_sdcard()
+        # kwargs- SoC args
+        # CPU parameters
+        cpu_type                 = args.cpu_type,
+        cpu_variant              = args.cpu_variant,
+        # ROM parameters
+        integrated_rom_size      = args.integrated_rom_size,
+        # SRAM parameters
+        integrated_sram_size     = args.integrated_sram_size,
+        # MAIN_RAM parameters
+        integrated_main_ram_size = args.integrated_main_ram_size,
+        # UART parameters
+        uart_baudrate            = args.uart_baudrate,
+        uart_fifo_depth          = args.uart_fifo_depth,
+        # Timer parameters
+        timer_uptime             = args.timer_uptime,
+        # SoC SDRAM args
+        max_sdram_size    = args.max_sdram_size)
 
-    builder = Builder(soc, **builder_argdict(args))
+    soc.add_spi_sdcard()
+
+    builder = Builder(soc,
+        output_dir= args.output_dir,
+        compile_software= not args.no_compile_software,
+        compile_gateware= not args.no_compile_gateware,
+        generate_doc = args.doc)
+
+    # Overrides from default that are not user-settable.
+    builder.csr_svd=os.path.join(builder.output_dir, "software", "rust", "csr.svd")
+
     builder_kargs = trellis_argdict(args) if args.toolchain == "trellis" else {}
     builder.build(**builder_kargs, run=args.build)
 

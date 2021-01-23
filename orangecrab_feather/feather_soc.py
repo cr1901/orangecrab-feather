@@ -156,21 +156,21 @@ class FeatherSoC(SoCCore):
         platform.add_extension(orangecrab.feather_i2c)
 
         # Serial -----------------------------------------------------------------------------------
-        if kwargs["uart_name"] in ["serial", "usb_acm"]:
-            kwargs["uart_name"] = "usb_acm"
-            # Defaults to USB ACM through ValentyUSB.
-            sys.path.append("deps/valentyusb")
+        # Defaults to USB ACM through ValentyUSB.
+        sys.path.append("deps/valentyusb")
+
+        print(kwargs)
 
         # SoCCore ----------------------------------------------------------------------------------
         SoCCore.__init__(self, platform, sys_clk_freq,
+            uart_name      = "usb_acm",
             ident          = "FeatherSoC on OrangeCrab (using LiteX)",
             ident_version  = True,
             **kwargs)
 
         # CRG --------------------------------------------------------------------------------------
-        with_usb_pll = kwargs.get("uart_name", None) == "usb_acm"
         crg_cls = _CRGSDRAM if not self.integrated_main_ram_size else _CRG
-        self.submodules.crg = crg_cls(platform, sys_clk_freq, with_usb_pll)
+        self.submodules.crg = crg_cls(platform, sys_clk_freq, True)
 
         # DDR3 SDRAM -------------------------------------------------------------------------------
         if not self.integrated_main_ram_size:
