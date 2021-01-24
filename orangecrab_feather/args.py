@@ -19,8 +19,8 @@ def soc_core_args(parser):
     # CPU parameters
     parser.add_argument("--cpu-type", default="vexriscv",
                         help="select CPU: {}, (default=vexriscv)".format(", ".join(iter(cpu.CPUS.keys()))))
-    parser.add_argument("--cpu-variant", default="minimal",
-                        help="select CPU variant, (default=minimal)")
+    parser.add_argument("--cpu-variant", default="standard",
+                        help="select CPU variant, (default=standard)")
     # ROM parameters
     parser.add_argument("--integrated-rom-size", default=0xA000, type=auto_int,
                         help="size/enable the integrated (BIOS) ROM (default=40KB)")
