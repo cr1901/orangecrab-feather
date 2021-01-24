@@ -8,11 +8,14 @@ from litex.build.lattice.trellis import trellis_args, trellis_argdict
 from .feather_soc import FeatherSoC
 # Get argument parsing from here. Simplified compared to litex_boards.
 from .args import *
+from .pac import *
 
 # Build --------------------------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description="LiteX SoC on OrangeCrab")
+    subparsers = parser.add_subparsers(help="sub-command help")
+
     parser.add_argument("--build",           action="store_true",  help="Build bitstream")
     parser.add_argument("--load",            action="store_true",  help="Load bitstream")
     parser.add_argument("--toolchain",       default="trellis",    help="FPGA  use, trellis (default) or diamond")
@@ -20,6 +23,7 @@ def main():
     parser.add_argument("--revision",        default="0.2",        help="Board Revision: 0.1 or 0.2 (default)")
     parser.add_argument("--device",          default="25F",        help="ECP5 device (default: 25F)")
     parser.add_argument("--sdram-device",    default="MT41K64M16", help="SDRAM device (default: MT41K64M16)")
+    parser.add_argument("--no-pac",    action="store_true", help="Skip generating Rust PAC")
     builder_args(parser)
     soc_sdram_args(parser)
     trellis_args(parser)
@@ -58,10 +62,14 @@ def main():
         generate_doc = args.doc)
 
     # Overrides from default that are not user-settable.
-    builder.csr_svd=os.path.join(builder.output_dir, "software", "rust", "csr.svd")
+    builder.csr_svd=os.path.join(builder.software_dir, "rust", "csr.svd")
 
     builder_kargs = trellis_argdict(args) if args.toolchain == "trellis" else {}
     builder.build(**builder_kargs, run=args.build)
+
+    if not args.no_pac:
+        pac_builder = PacBuilder(soc, builder)
+        pac_builder.generate()
 
     if args.load:
         prog = soc.platform.create_programmer()
