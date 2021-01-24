@@ -14,7 +14,6 @@ svd2ral = { git = "https://github.com/Disasm/svd2ral" }
 
     BUILD_RS = """use std::fs::{self, File};
 use std::io::Read;
-use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::env;
 use svd2ral::{generate, AddressSize};
