@@ -159,8 +159,6 @@ class FeatherSoC(SoCCore):
         # Defaults to USB ACM through ValentyUSB.
         sys.path.append("deps/valentyusb")
 
-        print(kwargs)
-
         # SoCCore ----------------------------------------------------------------------------------
         SoCCore.__init__(self, platform, sys_clk_freq,
             uart_name      = "usb_acm",
