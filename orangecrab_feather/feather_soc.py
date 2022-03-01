@@ -16,7 +16,6 @@ from migen.genlib.resetsync import AsyncResetSynchronizer
 
 from litex_boards.platforms import orangecrab
 from litex.soc.integration.soc_core import *
-from litex.soc.integration.soc_sdram import *
 
 from litex.soc.cores.clock import *
 from litex.soc.cores.uart import UARTPHY, UART
@@ -232,7 +231,7 @@ class FeatherSoC(SoCCore):
 
         spi_pads = platform.request("spi")
         self.comb += [
-            spi_pads.sck.eq(self.spi.pads.clk),
+            spi_pads.clk.eq(self.spi.pads.clk),
             spi_pads.mosi.eq(self.spi.pads.mosi),
             self.spi.pads.miso.eq(spi_pads.miso)
         ]

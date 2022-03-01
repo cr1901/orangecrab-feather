@@ -1,6 +1,4 @@
 from litex.soc.integration.soc import *
-from litex.soc.integration.soc_core import soc_core_argdict
-from litex.soc.integration.soc_sdram import soc_sdram_argdict
 
 def builder_args(parser):
     parser.add_argument("--output-dir", default=None,

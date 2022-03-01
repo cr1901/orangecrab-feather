@@ -62,7 +62,8 @@ def main():
         generate_doc = args.doc)
 
     # Overrides from default that are not user-settable.
-    builder.csr_svd=os.path.join(builder.software_dir, "rust", "csr.svd")
+    if not args.no_pac:
+        builder.csr_svd=os.path.join(builder.software_dir, "rust", "csr.svd")
 
     builder_kargs = trellis_argdict(args) if args.toolchain == "trellis" else {}
     builder.build(**builder_kargs, run=args.build)
