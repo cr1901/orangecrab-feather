@@ -10,4 +10,4 @@ edition = "2018"
 riscv = "0.6.0"
 riscv-rt = "0.8.0"
 panic-halt = "0.2.0"
-litex-pac = { path = "../build/orangecrab/software/rust/litex-pac" }
+litex-pac = { path = "../build/gsd_orangecrab/software/rust/litex-pac" }
