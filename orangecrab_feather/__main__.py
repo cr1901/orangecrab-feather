@@ -6,9 +6,9 @@ from litex.soc.integration.builder import Builder
 from litex.build.lattice.trellis import trellis_args, trellis_argdict
 
 from .feather_soc import FeatherSoC
+from .builder import FeatherBuilder
 # Get argument parsing from here. Simplified compared to litex_boards.
 from .args import *
-from .pac import *
 
 # Build --------------------------------------------------------------------------------------------
 
@@ -55,22 +55,15 @@ def main():
 
     soc.add_spi_sdcard()
 
-    builder = Builder(soc,
+    builder = FeatherBuilder(soc,
         output_dir= args.output_dir,
         compile_software= not args.no_compile_software,
         compile_gateware= not args.no_compile_gateware,
-        generate_doc = args.doc)
-
-    # Overrides from default that are not user-settable.
-    if not args.no_pac:
-        builder.csr_svd=os.path.join(builder.software_dir, "rust", "csr.svd")
+        generate_doc= args.doc,
+        generate_pac= not args.no_pac)
 
     builder_kargs = trellis_argdict(args) if args.toolchain == "trellis" else {}
     builder.build(**builder_kargs, run=args.build)
-
-    if not args.no_pac:
-        pac_builder = PacBuilder(soc, builder)
-        pac_builder.generate()
 
     if args.load:
         prog = soc.platform.create_programmer()
