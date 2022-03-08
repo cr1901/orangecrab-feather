@@ -27,7 +27,7 @@ def soc_core_args(parser):
                         help="size/enable the integrated SRAM (default=8KB)")
     # MAIN_RAM parameters
     parser.add_argument("--integrated-main-ram-size", default=0x4000, type=auto_int,
-                        help="size/enable the integrated main RAM")
+                        help="size/enable the integrated main RAM (default=16KB)")
     # UART parameters
     parser.add_argument("--uart-baudrate", default=115200, type=auto_int,
                         help="UART baudrate (default=115200)")
