@@ -16,11 +16,20 @@ and FeatherWings. Peripherals include:
 
 ## Quick Start
 
+Prerequisites:
+
+```
+git clone https://github.com/cr1901/orangecrab-feather.git
+cd orangecrab-feather
+git submodule update --init
+```
+
+_Make sure `riscv64-unknown-elf-gcc` is on the path._
+
 ### Build a SoC
 
-Run commands from the root of this repo. _Make sure `riscv64-unknown-elf-gcc`
-is on the path._ Also make sure the OrangeCrab is running the bootloader
-bitstream (keep push button pressed while connecting USB power).
+Run commands from the root of this repo. _Make sure the OrangeCrab is running
+the bootloader bitstream (keep push button pressed while connecting USB power)._
 
 Small SoC (defaults to 16kB of block RAM, no DRAM, shorter build time):
 ```
